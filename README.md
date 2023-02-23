@@ -6,6 +6,13 @@ arXiv, 2023, Arash Chaichi Mellatshahi, Shohreh Kasaei
 ![](https://github.com/arashfree/TLW-in-Super-Resolution/blob/main/fig1.png?raw=true)
 
 In recent years, research on super-resolution has primarily focused on the development of unsupervised models, blind networks, and the use of optimization methods in non-blind models. But, limited research has discussed the loss function in the super-resolution process. The majority of those studies have only used perceptual similarity in a conventional way. This is while the development of appropriate loss can improve the quality of other methods as well. In this article, a new weighting method for pixel-wise loss is proposed. With the help of this method, it is possible to use trainable weights based on the general structure of the image and its perceptual features while maintaining the advantages of pixel-wise loss. Also, a criterion for comparing weights of loss is introduced so that the weights can be estimated directly by a convolutional neural network using this criterion. In addition, in this article, the expectation-maximization method is used for the simultaneous estimation super-resolution network and weighting network. In addition, a new activation function, called "FixedSum", is introduced which can keep the sum of all components of vector constants while keeping the output components between zero and one. As shown in the experimental results section, weighted loss by the proposed method leads to better results than the unweighted loss in both signal-to-noise and perceptual similarity senses.
+## Super-Resolution
+
+#### train
+Run the following code to train models based on L1/MSE/L1+TLW/MSE+TLW loss.
+```
+python train.py --modelpath <path of folder of models> --trainpath <path of train images> --val <path of validation images> --load --best
+```
 
 
 ## Citation
