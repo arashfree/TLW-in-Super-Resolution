@@ -106,7 +106,7 @@ def val(models,
 
     for name in name_datasets:
         dataset_val = load_data_matlab_degradation(
-            folder + name + '/' + name,
+            folder + '/' + name,
             scale_factor, True, device)
 
         dataloader_val = DataLoader(dataset_val,
@@ -132,8 +132,8 @@ def _worker_init_fn_(_):
 def parse_opt(known=False):
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='EDSR', help='model structure')
-    parser.add_argument('--folder', type=str, default=r'E:\arash_file\sharif UNI 1399\IPL\Trainable Loss Weights\jetco_pc\superresolution\SRdataset-valid\dataset\SR_testing_datasets/', help='models path')
-    parser.add_argument('--modelpath',type=str,default=r'E:\arash_file\sharif UNI 1399\IPL\Trainable Loss Weights\jetco_pc\superresolution\code\models\EDSR_Sto_batch1_SRdataset_x4_epoch200-cdownsample_psnr/')
+    parser.add_argument('--folder', type=str, default='', help='models path')
+    parser.add_argument('--modelpath',type=str,default='')
     parser.add_argument('--load', action='store_true', default=True, help='load models')
     parser.add_argument('--best', action='store_true', help='best model or last')
     parser.add_argument('--device', default='cpu', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
@@ -216,8 +216,8 @@ if __name__ == '__main__':
                 models[key].load_state_dict(torch.load(opt.modelpath + 'SRModel_' + key + '.pth', map_location=torch.device(device)))
 
 
-    name_datasets = ['Set5']#['Urban100', 'Set5', 'Set14', 'BSDS100',
-                     #'Manga109', 'T91', 'BSDS200', 'General100']
+    name_datasets = ['Urban100', 'Set5', 'Set14', 'BSDS100',
+                     'Manga109', 'T91', 'BSDS200', 'General100']
 
     loss_fn_alex = None#lpips.LPIPS(net='alex').to(device)
     loss_fn_vgg = None#lpips.LPIPS(net='vgg').to(device)
