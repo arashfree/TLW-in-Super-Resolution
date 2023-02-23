@@ -206,7 +206,7 @@ if __name__ == '__main__':
         if opt.best:
             for key in models.keys():
                 models[key].load_state_dict(
-                    torch.load(opt.folder + 'SRModel_' + key + '_best.pth', map_location=torch.device(device)))
+                    torch.load(opt.modelpath + 'SRModel_' + key + '_best.pth', map_location=torch.device(device)))
                 if wmodels[key] is not None:
                     wmodels[key].load_state_dict(
                         torch.load(opt.modelpath + 'WNet_' + key + '_best.pth', map_location=torch.device(device)))
