@@ -170,17 +170,14 @@ def _worker_init_fn_(_):
 def parse_opt(known=False):
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='RCAN', help='model structure')
-    parser.add_argument('--trainpath', type=str, default=
-    "E:/arash_file/sharif UNI 1399/IPL/Trainable Loss Weights/jetco_pc/superresolution/SRdataset-valid/dataset/SR_testing_datasets/Set5/Set5/"
+    parser.add_argument('--trainpath', type=str, default=''
                         , help='train dataset path')
-
-    parser.add_argument('--valpath', type=str, default=
-    r"E:/arash_file/sharif UNI 1399/IPL/Trainable Loss Weights/jetco_pc/superresolution/SRdataset-valid/dataset/SR_testing_datasets/Set5/Set5/",
+    parser.add_argument('--valpath', type=str, default='',
                         help='validation dataset path')
     parser.add_argument('--startepoch', type=int, default=0)
     parser.add_argument('--endepoch', type=int, default=100)
     parser.add_argument('--batchsize', type=int, default=1)
-    parser.add_argument('--folder', type=str, default=r'E:\arash_file\sharif UNI 1399\IPL\Trainable Loss Weights\jetco_pc\superresolution\SRdataset-valid\dataset\SR_testing_datasets/', help='models path')
+    parser.add_argument('--modelpath', type=str, default='', help='models path')
     parser.add_argument('--load', action='store_true', default='', help='load models')
     parser.add_argument('--best', action='store_true', help='best model or last')
     parser.add_argument('--device', default='cpu', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
@@ -254,18 +251,17 @@ if __name__ == '__main__':
 
         if opt.best:
             for key in  models.keys():
-                models[key].load_state_dict(torch.load(opt.folder + 'SRModel_'+ key + '_best.pth', map_location=torch.device(device)))
+                models[key].load_state_dict(torch.load(opt.modelpath + 'SRModel_'+ key + '_best.pth', map_location=torch.device(device)))
                 if wmodels[key] is not None:
                     wmodels[key].load_state_dict(
-                        torch.load(opt.folder + 'WNet_' + key + '_best.pth', map_location=torch.device(device)))
+                        torch.load(opt.modelpath + 'WNet_' + key + '_best.pth', map_location=torch.device(device)))
 
         else:
             for key in models.keys():
-                models[key].load_state_dict(torch.load(opt.folder + key + '.pth', map_location=torch.device(device)))
+                models[key].load_state_dict(torch.load(opt.modelpath + key + '.pth', map_location=torch.device(device)))
 
-    def ff(a,b,normalize=False):
-        return torch.mean((a-b)**2)
-    loss_fn_vgg = ff#lpips.LPIPS(net='vgg',lpips=False).to(device)
+
+    loss_fn_vgg = lpips.LPIPS(net='vgg',lpips=False).to(device)
 
     tlwloss1 = TLWLossStochastic(wmodels['tlw1'], loss_fn_vgg, woptims['tlw1'], 'l1',device=device)
     tlwloss2 = TLWLossStochastic(wmodels['tlw2'], loss_fn_vgg, woptims['tlw2'], 'l2',device=device)
