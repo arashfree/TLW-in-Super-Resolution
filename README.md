@@ -11,7 +11,7 @@ In recent years, research on super-resolution has primarily focused on the devel
 #### train
 Run the following code to train models based on L1/MSE/L1+TLW/MSE+TLW loss.
 ```
-python train.py --modelpath <path of folder of models> --trainpath <path of train images> --val <path of validation images> --load --best
+python train.py --model <'RCAN'or'EDSR'or'VDSR'> --modelpath <path of folder of models> --trainpath <path of train images> --val <path of validation images> --load --best --device <'cpu'or'cuda'>
 ```
 
 
