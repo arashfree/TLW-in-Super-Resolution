@@ -125,7 +125,7 @@ def train(models,
 
         print('----------- Epoch: ', epoch)
 
-        for key in results.key():
+        for key in results.keys():
             results[key].endloop()
             if wmodels[key] is not None:
                 w_losses[key].endloop()
@@ -139,17 +139,17 @@ def train(models,
         print(f"-------------------- Epoch:{epoch}, time:{time.time() - start_time}")
 
         valid_result = {}
-        for key in models.key():
+        for key in models.keys():
             valid_result[key]= validation(models[key], dataloader_val,(loss_fn_vgg, loss_fn_alex),'cpu')
 
             print("val "+key+":", valid_result[key])
 
-        for key in models.key():
+        for key in models.keys():
             torch.save(models[key].state_dict(), './SRModel_'+key+'.pth')
             if wmodels[key] is not None:
                 torch.save(wmodels[key].state_dict(), './WNet_' + key + '.pth')
 
-        for key in models.key():
+        for key in models.keys():
             if valid_result[key]['LPIPS-vgg'] < best_lpips[key]:
                 best_lpips[key] = valid_result[key]['LPIPS-vgg']
                 torch.save(models[key].state_dict(), './'+key+'_best.pth')
