@@ -18,6 +18,18 @@ Run the following code to validate models based on L1/MSE/L1+TLW/MSE+TLW loss on
 ```
 python val.py --model <'RCAN'or'EDSR'or'VDSR'> --modelpath <path of folder of models> --folder <path of validation images> --load --best --device <'cpu'or'cuda'>
 ```
+## Pretrain models
+| model| scale | url |
+| --- | --- | --- |
+| EDSR | x2 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
+| VDSR | x2 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
+| RCAN | x2 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
+| EDSR | x3 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
+| VDSR | x3 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
+| RCAN | x3 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
+| EDSR | x4 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
+| VDSR | x4 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
+| RCAN | x4 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
 
 
 ## Citation
