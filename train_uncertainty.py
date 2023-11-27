@@ -161,16 +161,16 @@ def train(models,
             print("val "+key+":", valid_result[key])
 
         for key in models.keys(): #bug
-            torch.save(models[key].state_dict(), './SRModel_'+key+'.pth')
+            torch.save(models[key].state_dict(), opt.modelpath + 'SRModel_'+key+'.pth')
             if wmodels[key] is not None:
-                torch.save(wmodels[key].state_dict(), './WNet_' + key + '.pth')
+                torch.save(wmodels[key].state_dict(), opt.modelpath + 'WNet_' + key + '.pth')
 
         for key in models.keys(): #bug
             if valid_result[key]['LPIPS-vgg'] < best_lpips[key]:
                 best_lpips[key] = valid_result[key]['LPIPS-vgg']
-                torch.save(models[key].state_dict(), './SRModel_'+key+'_best.pth')
+                torch.save(models[key].state_dict(), opt.modelpath +'SRModel_'+key+'_best.pth')
                 if wmodels[key] is not None:
-                    torch.save(wmodels[key].state_dict(), './WNet_'+key+'_best.pth')
+                    torch.save(wmodels[key].state_dict(), opt.modelpath +'WNet_'+key+'_best.pth')
 
 
 
@@ -188,14 +188,14 @@ def _worker_init_fn_(_):
 def parse_opt(known=False):
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='HAT', help='model structure')
-    parser.add_argument('--trainpath', type=str, default=r'D:\Arash\Jetco\my\SRDataset\DIV2K_train_HR\DIV2K_train_HR/'
+    parser.add_argument('--trainpath', type=str, default='SRDataset/DIV2K_train_HR/DIV2K_train_HR/'
                         , help='train dataset path')
-    parser.add_argument('--valpath', type=str, default=r'D:\Arash\Jetco\my\SRDataset\SR_testing_datasets\val\Set5/',
+    parser.add_argument('--valpath', type=str, default=r'SRDataset/SR_testing_datasets/Set5/',
                         help='validation dataset path')
     parser.add_argument('--startepoch', type=int, default=0)
     parser.add_argument('--endepoch', type=int, default=100)
     parser.add_argument('--batchsize', type=int, default=4)
-    parser.add_argument('--modelpath', type=str, default=r'D:\Arash\Jetco\my\TLW-in-Super-Resolution-main\TLW-in-Super-Resolution-main\compare_unc_step2_1epoch/', help='models path')
+    parser.add_argument('--modelpath', type=str, default=r'Checkpoints/L1TLW_L1UNCERTAINTY_L1/HATx4/', help='models path')
     parser.add_argument('--load', action='store_true', default=True, help='load models')
     parser.add_argument('--best', action='store_true', help='best model or last')
     parser.add_argument('--device', default='cuda', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
@@ -220,9 +220,8 @@ if __name__ == '__main__':
 
     if not opt.load:
         SRModel.apply(weights_init)
-        torch.save(SRModel.state_dict(), './SRModel_start.pth')
-        # SRModel.load_state_dict(torch.load('./SRModel_start.pth'))
-
+        torch.save(SRModel.state_dict(),  opt.modelpath + 'SRModel_start.pth')
+        
         models['tlw1'] = SuperResolutionModel(3).to(device)
         optims['tlw1'] = torch.optim.Adam(models['tlw1'].parameters(), lr=0.0001, betas=(0.5, 0.999))
         #models['tlw2'] = SuperResolutionModel(3).to(device)
