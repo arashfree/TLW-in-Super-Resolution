@@ -14,7 +14,7 @@ python train.py --model <'RCAN'or'EDSR'or'VDSR'> --modelpath <path of folder of 
 ```
 Run the following code to train HAT model based on L1+TLW/L1+uncertainty/L1 loss.
 ```
-python train_uncertainty.py.py --model <'HAT'> --modelpath <path of folder of models> --trainpath <path of train images> --val <path of validation images> --load  --device <'cpu'or'cuda'>
+python train_uncertainty.py.py --model 'HAT' --modelpath <path of folder of models> --trainpath <path of train images> --val <path of validation images> --load  --device <'cpu'or'cuda'>
 ```
 
 ### validation
@@ -24,7 +24,7 @@ python val.py --model <'RCAN'or'EDSR'or'VDSR'> --modelpath <path of folder of mo
 ```
 Run the following code to validate HAT model based on L1+TLW/L1+uncertainty/L1 loss.
 ```
-python val.py --model <'HAT'> --modelpath <path of folder of models> --folder <path of validation images> --load --best --device <'cpu'or'cuda'>
+python val_uncertanity.py --model 'HAT' --modelpath <path of folder of models> --folder <path of validation images> --load --best --device <'cpu'or'cuda'>
 ```
 
 
