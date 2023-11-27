@@ -100,7 +100,7 @@ def validation(model, dataloader , lpips_models,device = 'cuda'):
 
 def val(models,
         lpips_models,
-        folder=r'\superresolution\SRdataset-valid\dataset\SR_testing_datasets/',
+        folder='SRDataset/SR_testing_datasets/',
         name_datasets=['Urban100', 'Set5', 'Set14', 'BSDS100',
                        'Manga109', 'T91', 'BSDS200', 'General100']
         , devie='cuda'):
@@ -136,8 +136,8 @@ def _worker_init_fn_(_):
 def parse_opt(known=False):
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='EDSR', help='model structure')
-    parser.add_argument('--folder', type=str, default='', help='models path')
-    parser.add_argument('--modelpath',type=str,default='')
+    parser.add_argument('--folder', type=str, default='SRDataset/SR_testing_datasets/', help='dataset path')
+    parser.add_argument('--modelpath',type=str,default='Checkpoints/L1_MSE_L1TLW_MSETLW/EDSRx4/')
     parser.add_argument('--load', action='store_true', default=True, help='load models')
     parser.add_argument('--best', action='store_true', help='best model or last')
     parser.add_argument('--device', default='cpu', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
