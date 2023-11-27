@@ -170,7 +170,7 @@ def parse_opt(known=False):
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='HAT', help='model structure')
     parser.add_argument('--folder', type=str, default='SRDataset/SR_testing_datasets/', help='dataset path')
-    parser.add_argument('--modelpath',type=str,default='Checkpoints/L1TLW_L1UNCERTAINTY_L1/x4/HAT/', help = 'models path')
+    parser.add_argument('--modelpath',type=str,default='Checkpoints/L1TLW_L1UNCERTAINTY_L1/HATx4/', help = 'models path')
     parser.add_argument('--load', action='store_true', default=True, help='load models')
     parser.add_argument('--best', action='store_true', help='best model or last')
     parser.add_argument('--device', default='cuda', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
@@ -193,7 +193,7 @@ if __name__ == '__main__':
 
     if not opt.load:
         SRModel.apply(weights_init)
-        torch.save(SRModel.state_dict(), './SRModel_start.pth')
+        torch.save(SRModel.state_dict(), opt.modelpath +'SRModel_start.pth')
         
         models['tlw1'] = SuperResolutionModel(3).to(device)
         optims['tlw1'] = torch.optim.Adam(models['tlw1'].parameters(), lr=0.0001, betas=(0.5, 0.999))
