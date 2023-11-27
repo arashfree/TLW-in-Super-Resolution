@@ -12,13 +12,22 @@ Run the following code to train models based on L1/MSE/L1+TLW/MSE+TLW loss.
 ```
 python train.py --model <'RCAN'or'EDSR'or'VDSR'> --modelpath <path of folder of models> --trainpath <path of train images> --val <path of validation images> --load  --device <'cpu'or'cuda'>
 ```
+Run the following code to train HAT model based on L1+TLW/L1+uncertainty/L1 loss.
+```
+python train_uncertainty.py.py --model <'HAT'> --modelpath <path of folder of models> --trainpath <path of train images> --val <path of validation images> --load  --device <'cpu'or'cuda'>
+```
 
 ### validation
 Run the following code to validate models based on L1/MSE/L1+TLW/MSE+TLW loss on the specified dataset.
 ```
 python val.py --model <'RCAN'or'EDSR'or'VDSR'> --modelpath <path of folder of models> --folder <path of validation images> --load --best --device <'cpu'or'cuda'>
 ```
-## Checkpoint models
+Run the following code to validate HAT model based on L1+TLW/L1+uncertainty/L1 loss.
+```
+python val.py --model <'HAT'> --modelpath <path of folder of models> --folder <path of validation images> --load --best --device <'cpu'or'cuda'>
+```
+
+
 | model| scale | url |
 | --- | --- | --- |
 | EDSR | x2 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
@@ -30,6 +39,8 @@ python val.py --model <'RCAN'or'EDSR'or'VDSR'> --modelpath <path of folder of mo
 | EDSR | x4 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
 | VDSR | x4 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
 | RCAN | x4 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
+| HAT | x4 | [download link](https://drive.google.com/drive/folders/1b6pLlMgW7UVATc6nmyknt6jCVxvbqHTU?usp=sharing) |
+
 
 
 ## Citation
