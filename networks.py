@@ -3,11 +3,40 @@ from torch import nn
 import torch.nn.functional as F
 import numpy as np
 import math
+from hat_arch import HAT,HAT2
+import matplotlib.pyplot as plt
 
 device = 'cpu'
 up_scale_factor = 4
 scale_factor = 1 / up_scale_factor
 
+from utils import show_tensor_images
+class HATNet(nn.Module):
+    def __init__(self,ch):
+        super(HATNet, self).__init__()
+        self.net = HAT(upscale=up_scale_factor)
+    def forward(self,x):
+        return self.net(x)
+
+
+class UHATNet(nn.Module):
+    def __init__(self,ch):
+        super(UHATNet, self).__init__()
+        self.net = HAT2(upscale=up_scale_factor)
+        self.u_estimator = nn.Sequential(
+            nn.Upsample(scale_factor=up_scale_factor,mode='nearest'),
+            nn.Conv2d(64, 64, 3, 1, 1),
+            nn.ELU(),
+            nn.Conv2d(64, 64, 3, 1, 1),
+            nn.ELU(),
+            nn.Conv2d(64, 1, 3, 1, 1),
+            nn.ELU(alpha=0.1),
+        )
+
+    def forward(self,x):
+        sr,fea =  self.net(x)
+        u = self.u_estimator(fea) + 0.1
+        return sr , u
 
 def weights_init(m):
     if isinstance(m, nn.Conv2d) or isinstance(m, nn.ConvTranspose2d):
@@ -91,6 +120,14 @@ class WeightStochastic(nn.Module):
         b, ch, w, h = x.size()
 
         x = self.conv(x)
+
+        #xx = x.clone()
+        #his, bin = torch.histogram(xx.cpu(), bins=100, range=(0., 1.))
+        #plt.plot(bin[:-1], torch.log10(his))
+        #plt.xlabel('conv out')
+        #plt.savefig('f/fig_conv_out.jpg')
+        #show_tensor_images(x * 2 - 1.0, filename='f/conv_out.jpg')
+
         s = w * h
         sum_x = torch.sum(torch.sum(x, dim=3), dim=2)  # *0.99+0.005
         # sum_x = torch.sum(x)*0.99+0.005
@@ -102,6 +139,13 @@ class WeightStochastic(nn.Module):
         beta = torch.unsqueeze(torch.unsqueeze(beta, dim=2), dim=3)
 
         w = x + alpha * (1 - x) - beta * x
+
+        ww = w.clone()
+        his, bin = torch.histogram(ww.cpu(), bins=100, range=(0., 1.))
+        plt.plot(bin[:-1], torch.log10(his))
+        plt.xlabel('fixedsum out')
+        plt.savefig('f/fig_fixedsum_out.jpg')
+        show_tensor_images(w * 2 - 1.0, filename='f/fixedsum_out.jpg')
         w = 0.999 * w + 0.0005
 
         if (sample_num == 1):
