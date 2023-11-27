@@ -194,57 +194,35 @@ if __name__ == '__main__':
     if not opt.load:
         SRModel.apply(weights_init)
         torch.save(SRModel.state_dict(), './SRModel_start.pth')
-        # SRModel.load_state_dict(torch.load('./SRModel_start.pth'))
-
+        
         models['tlw1'] = SuperResolutionModel(3).to(device)
         optims['tlw1'] = torch.optim.Adam(models['tlw1'].parameters(), lr=0.0001, betas=(0.5, 0.999))
-        #models['tlw2'] = SuperResolutionModel(3).to(device)
-        #optims['tlw2'] = torch.optim.Adam(models['tlw2'].parameters(), lr=0.0001, betas=(0.5, 0.999))
         models['l1'] = SuperResolutionModel(3).to(device)
         optims['l1'] = torch.optim.Adam(models['l1'].parameters(), lr=0.0001, betas=(0.5, 0.999))
-        #models['mse'] = SuperResolutionModel(3).to(device)
-        #optims['mse'] = torch.optim.Adam(models['mse'].parameters(), lr=0.0001, betas=(0.5, 0.999))
         models['uncertainty'] = UHATNet(3).to(device)
         optims['uncertainty'] = torch.optim.Adam(models['uncertainty'].parameters(), lr=0.0001, betas=(0.5, 0.999))
 
         wmodels['tlw1'] = WeightStochastic(0.5).to(device)
-        #wmodels['tlw2'] = WeightStochastic(0.5).to(device)
         wmodels['l1'] = None
-        #wmodels['mse'] = None
         wmodels['uncertainty'] = None
 
-        # WNet_tlw1 = Weight(0.5).cuda()
-        # WNet_tlw2 = Weight(0.5).cuda()
-
+        
         woptims['tlw1'] = torch.optim.Adam(wmodels['tlw1'].parameters(), lr=0.0001, betas=(0.5, 0.999))
-        # woptims['tlw2'] = torch.optim.Adam(wmodels['tlw2'].parameters(), lr=0.0001, betas=(0.5, 0.999))
-
+        
         models['tlw1'].load_state_dict(SRModel.state_dict())
-        # models['tlw2'].load_state_dict(SRModel.state_dict())
         models['l1'].load_state_dict(SRModel.state_dict())
-        # models['mse'].load_state_dict(SRModel.state_dict())
         wmodels['tlw1'].apply(weights_init)
-        # wmodels['tlw2'].load_state_dict(wmodels['tlw1'].state_dict())
-
+        
     else:
 
         models['tlw1'] = SuperResolutionModel(3).to(device)
-        # optims['tlw1'] = torch.optim.Adam(models['tlw1'].parameters(), lr=0.0001, betas=(0.5, 0.999))
-        # models['tlw2'] = SuperResolutionModel(3).to(device)
-        # optims['tlw2'] = torch.optim.Adam(models['tlw2'].parameters(), lr=0.0001, betas=(0.5, 0.999))
         models['l1'] = SuperResolutionModel(3).to(device)
-        # optims['l1'] = torch.optim.Adam(models['l1'].parameters(), lr=0.0001, betas=(0.5, 0.999))
-        # models['mse'] = SuperResolutionModel(3).to(device)
-        # optims['mse'] = torch.optim.Adam(models['mse'].parameters(), lr=0.0001, betas=(0.5, 0.999))
         wmodels['tlw1'] = WeightStochastic(0.5).to(device)
         models['uncertainty'] = UHATNet(3).to(device)
         optims['uncertainty'] = torch.optim.Adam(models['uncertainty'].parameters(), lr=0.0001, betas=(0.5, 0.999))
 
-        # wmodels['tlw2'] = WeightStochastic(0.5).to(device)
         woptims['tlw1'] = torch.optim.Adam(wmodels['tlw1'].parameters(), lr=0.0001, betas=(0.5, 0.999))
-        # woptims['tlw2'] = torch.optim.Adam(wmodels['tlw2'].parameters(), lr=0.0001, betas=(0.5, 0.999))
         wmodels['l1'] = None
-        # wmodels['mse'] = None
         wmodels['uncertainty'] = None
 
 
