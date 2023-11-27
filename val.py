@@ -34,7 +34,11 @@ def validation(model, dataloader , lpips_models,device = 'cuda'):
             Lr = Lr.to(device)
 
             with torch.no_grad():
-                Sr = model(Lr).clamp(min=-1, max=1)
+                Sr = model(Lr)
+                if isinstance(Sr,tuple):
+                    Sr = Sr[0]
+                Sr = Sr.clamp(min=-1, max=1)
+
 
 
             pi.append(torch.mean(loss_fn_vgg(Sr, Hr, normalize=False)).item())
@@ -116,9 +120,9 @@ def val(models,
         print('-----------', name, '-----------------')
         valid_result = {}
         for key in models.keys():
-            valid_result[key] = validation(models[key], dataloader_val, (loss_fn_vgg, loss_fn_alex), 'cpu')
+            valid_result[key] = validation(models[key], dataloader_val, (loss_fn_vgg, loss_fn_alex),device)
             print(print("\nval " + key + " :", valid_result[key]))
-        val_bic = validation(up, dataloader_val, lpips_models, devie)
+        val_bic = validation(up, dataloader_val, lpips_models, device)
         print("\nval bicubic: ", val_bic)
 
 
@@ -214,13 +218,15 @@ if __name__ == '__main__':
         else:
             for key in models.keys():
                 models[key].load_state_dict(torch.load(opt.modelpath + 'SRModel_' + key + '.pth', map_location=torch.device(device)))
+                if wmodels[key] is not None:
+                    wmodels[key].load_state_dict(
+                        torch.load(opt.modelpath + 'WNet_' + key + '.pth', map_location=torch.device(device)))
 
 
     name_datasets = ['Urban100', 'Set5', 'Set14', 'BSDS100',
                      'Manga109', 'T91', 'BSDS200', 'General100']
 
-    loss_fn_alex = None#lpips.LPIPS(net='alex').to(device)
-    loss_fn_vgg = None#lpips.LPIPS(net='vgg').to(device)
+    loss_fn_alex =lpips.LPIPS(net='alex').to(device)
+    loss_fn_vgg = lpips.LPIPS(net='vgg').to(device)
     val(models, (loss_fn_vgg, loss_fn_alex), opt.folder, name_datasets, opt.device)
-
 
