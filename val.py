@@ -100,7 +100,7 @@ def validation(model, dataloader , lpips_models,device = 'cuda'):
 
 def val(models,
         lpips_models,
-        folder=r'E:\arash_file\sharif UNI 1399\IPL\Trainable Loss Weights\jetco_pc\superresolution\SRdataset-valid\dataset\SR_testing_datasets/',
+        folder=r'\superresolution\SRdataset-valid\dataset\SR_testing_datasets/',
         name_datasets=['Urban100', 'Set5', 'Set14', 'BSDS100',
                        'Manga109', 'T91', 'BSDS200', 'General100']
         , devie='cuda'):
