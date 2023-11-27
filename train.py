@@ -4,7 +4,7 @@ from torch import nn
 from tqdm.auto import tqdm
 from torch.utils.data import DataLoader
 import numpy as np
-from networks import device,up_scale_factor,scale_factor,RCAN,VDSR,SRCNN,EDSR,weights_init,Weight,WeightStochastic
+from networks import device,up_scale_factor,scale_factor,RCAN,VDSR,SRCNN,EDSR,weights_init,Weight,WeightStochastic,HATNet,UHATNet
 from tlw import TLWLoss,TLWLossStochastic
 from utils import record,SRResults
 import lpips
@@ -42,6 +42,8 @@ def train(models,
     mean_ws = {}
     results = {}
     best_lpips = {}
+    loss_fn_vgg = lpips.LPIPS(net='vgg').to(device) 
+    loss_fn_alex = lpips.LPIPS(net='alex').to(device) 
     for key in models.keys():
         models[key].train()
         results[key] = SRResults(loss_fn_vgg)
@@ -68,10 +70,9 @@ def train(models,
             ## weights update
             with torch.no_grad():
                 Srs = models['tlw1'](Lrs)
-
             w_loss, mean_w = tlwloss1.updateWeightNet(Srs, Hrs)
             w_losses['tlw1'].append(w_loss)
-            mean_ws['tlw2'].append(mean_w)
+            mean_ws['tlw1'].append(mean_w)
 
             # WNET_tlw2
             with torch.no_grad():
@@ -117,6 +118,7 @@ def train(models,
 
 
 
+
             pbar.set_description(('%10s' * 1 + '%10.4g' * 6) % (
                 f'{epoch}/{maxepoch - 1}', np.mean(results['tlw1'].psnrs.inloopdata), np.mean(results['tlw2'].psnrs.inloopdata) ,
                     np.mean(results['mse'].psnrs.inloopdata) , np.mean(results['l1'].psnrs.inloopdata) ,np.mean(w_losses['tlw1'].inloopdata) , np.mean(w_losses['tlw2'].inloopdata) ))
@@ -140,11 +142,11 @@ def train(models,
 
         valid_result = {}
         for key in models.keys():
-            valid_result[key]= validation(models[key], dataloader_val,(loss_fn_vgg, loss_fn_alex),'cpu')
+            valid_result[key]= validation(models[key], dataloader_val,(loss_fn_vgg, loss_fn_alex),device)
 
             print("val "+key+":", valid_result[key])
 
-        for key in models.keys():
+        for key in models.keys(): 
             torch.save(models[key].state_dict(), './SRModel_'+key+'.pth')
             if wmodels[key] is not None:
                 torch.save(wmodels[key].state_dict(), './WNet_' + key + '.pth')
@@ -169,10 +171,10 @@ def _worker_init_fn_(_):
 
 def parse_opt(known=False):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, default='RCAN', help='model structure')
-    parser.add_argument('--trainpath', type=str, default=''
+    parser.add_argument('--model', type=str, default='HAT', help='model structure')
+    parser.add_argument('--trainpath', type=str, default=r'D:\Arash\Jetco\my\SRDataset\SR_training_datasets\all/'
                         , help='train dataset path')
-    parser.add_argument('--valpath', type=str, default='',
+    parser.add_argument('--valpath', type=str, default=r'D:\Arash\Jetco\my\SRDataset\SR_testing_datasets\val\Set5/',
                         help='validation dataset path')
     parser.add_argument('--startepoch', type=int, default=0)
     parser.add_argument('--endepoch', type=int, default=100)
@@ -180,7 +182,7 @@ def parse_opt(known=False):
     parser.add_argument('--modelpath', type=str, default='', help='models path')
     parser.add_argument('--load', action='store_true', default='', help='load models')
     parser.add_argument('--best', action='store_true', help='best model or last')
-    parser.add_argument('--device', default='cpu', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
+    parser.add_argument('--device', default='cuda', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
     parser.add_argument('--workers', type=int, default=8, help='maximum number of dataloader workers')
     opt = parser.parse_known_args()[0] if known else parser.parse_args()
     return opt
@@ -190,7 +192,7 @@ def parse_opt(known=False):
 if __name__ == '__main__':
     opt = parse_opt(True)
 
-    SRdict = {'RCAN':RCAN,'EDSR':EDSR,'VDSR':VDSR}
+    SRdict = {'RCAN':RCAN,'EDSR':EDSR,'VDSR':VDSR,'HAT':HATNet}
     SuperResolutionModel = SRdict[opt.model]
 
     SRModel = SuperResolutionModel(3).to(opt.device)
@@ -214,10 +216,12 @@ if __name__ == '__main__':
         models['mse'] = SuperResolutionModel(3).to(device)
         optims['mse'] = torch.optim.Adam(models['mse'].parameters(), lr=0.0001, betas=(0.5, 0.999))
 
+
         wmodels['tlw1'] = WeightStochastic(0.5).to(device)
         wmodels['tlw2'] = WeightStochastic(0.5).to(device)
         wmodels['l1'] = None
         wmodels['mse'] = None
+
 
         # WNet_tlw1 = Weight(0.5).cuda()
         # WNet_tlw2 = Weight(0.5).cuda()
@@ -258,7 +262,10 @@ if __name__ == '__main__':
 
         else:
             for key in models.keys():
-                models[key].load_state_dict(torch.load(opt.modelpath + key + '.pth', map_location=torch.device(device)))
+                models[key].load_state_dict(torch.load(opt.modelpath + 'SRModel_' + key + '.pth', map_location=torch.device(device)))
+                if wmodels[key] is not None:
+                    wmodels[key].load_state_dict(
+                        torch.load(opt.modelpath + 'WNet_' + key + '.pth', map_location=torch.device(device)))
 
 
     loss_fn_vgg = lpips.LPIPS(net='vgg',lpips=False).to(device)
