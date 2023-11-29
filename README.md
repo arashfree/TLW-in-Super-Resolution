@@ -52,7 +52,7 @@ If this article is useful for your research, please cite the article:
 @article{ 
   mellatshahi2023trainable, 
   title={Trainable Loss Weights in Super-Resolution}, 
-  author={Mellatshahi, Arash Chaichi and Kasaei, Shohreh},   
+  author={Mellatshahi Chaichi, Arash and Kasaei, Shohreh},   
   journal={arXiv preprint arXiv:2301.10575},
   year={2023} 
 }
