@@ -20,19 +20,20 @@
           
           <h1 id="project_title">Trainable Loss Weights in Super-Resolution </h1>
           <h2 id="project_tagline">Arash Chaichi , Shohreh Kasaei </h2>
-          <a id="forkme_banner" href="https://github.com/arashfree/TLW-in-Super-Resolution/tree/main">View on GitHub</a>
-          
             <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/arashfree/TLW-in-Super-Resolution/archive/refs/heads/main.zip">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="{{ site.github.tar_url }}">Download this project as a tar.gz file</a>
+              <a id="forkme_banner" href="https://github.com/arashfree/TLW-in-Super-Resolution/tree/main">GitHub</a>
+          
+              <a id="forkme_banner" href="https://arxiv.org/abs/2301.10575">Paper</a>
+              <a class="zip_download_link" href="https://github.com/arashfree/TLW-in-Super-Resolution/archive/refs/heads/main.zip">Download</a>
+              <a class="forkme_banner" href="git@github.com:arashfree/TLW-in-Super-Resolution.git">Clone</a>
             </section>
-          header>
+        </header>
     </div>
 
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        {{ content }}
+        In recent years, limited research has discussed the loss function in the super-resolution process. The majority of those studies have only used perceptual similarity conventionally. This is while the development of appropriate loss can improve the quality of other methods as well. In this article, a new weighting method for pixel-wise loss is proposed. With the help of this method, it is possible to use trainable weights based on the general structure of the image and its perceptual features while maintaining the advantages of pixel-wise loss. Also, a criterion for comparing weights of loss is introduced so that the weights can be estimated directly by a convolutional neural network. In addition, in this article, the expectation-maximization method is used for the simultaneous estimation super-resolution network and weighting network. In addition, a new activation function, called “FixedSum”, is introduced which can keep the sum of all components of vector constants while keeping the output components between zero and one. As experimental results shows, weighted loss by the proposed method leads to better results than the unweighted loss and weighted loss based on uncertainty in both signal-to-noise and perceptual similarity senses on the state-of-the-art networks. Code is available online.
       </section>
     </div>
 
